@@ -53,7 +53,7 @@ class tenant_app():
         try:
             self.type_convert()
             tenant = list(TENANT.objects.raw(self.requestObj))
-        except TENANT.DoesNotExist as e:
+        except TENANT.DoesNotExist:
             print("tenant_get doesn't exist")
             return 'DoesNotExist'
         except Exception as e:

@@ -52,9 +52,12 @@ def tenant_create():
 @tenants.route('/tenants/<tenant_id>', methods=['GET'])
 def tenant_get_by_id(tenant_id):
     from application.tenant_app import tenant_app
+    from auth import raise_status
     requestObj = {'_id': tenant_id}
     fields = request.args.get('fields')
     tenant = tenant_app(requestObj=requestObj, collection='tenant').tenant_find_one()
+    if tenant == 'DoesNotExist':
+        return raise_status(400, '错误的id')
     re = tenant_app(fields=fields).get_return_by_fields(tenant=tenant)
     return jsonify(re)
 
