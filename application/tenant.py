@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from bson import ObjectId
 
 tenants = Blueprint('tenants', __name__)
 
@@ -6,8 +7,24 @@ tenants = Blueprint('tenants', __name__)
 @tenants.route('/tenants', methods=['GET'])
 def tenant_list():
     from application.tenant_app import tenant_app
+    from auth import raise_status
     requestObj = {}
-    if request.args:
+    page = int(request.args.get('page', '1'))
+    pageSize = int(request.args.get('pageSize', '20'))
+    if request.args.get('all'):
+        page = pageSize = None
+    else:
+        try:
+            count = tenant_app().tenant_count()
+        except Exception:
+            return raise_status(500, 'SystemError')
+        if count % pageSize == 0:
+            totalpage = count // pageSize
+        else:
+            totalpage = (count // pageSize) + 1
+        if page > totalpage:
+            return raise_status(400, '页数超出范围')
+    if request.args.get('fields'):
         queries = list(request.args.keys())
         for query in queries:
             requestObj[query] = request.args.get(query)
@@ -20,7 +37,9 @@ def tenant_list():
         re = tenant_app(fields=fields).get_return_by_fields(tenant=tenant)
         tenant_ln_list.append(re)
     returnObj = {}
-    returnObj['data'] = tenant_ln_list
+    returnObj['tenant'] = tenant_ln_list
+    if not request.args.get('all'):
+        returnObj['meta'] = {'page': page, 'pageSize': pageSize, 'total': count, 'totalPage': totalpage}
     return jsonify(returnObj)
 
 

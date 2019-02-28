@@ -7,7 +7,6 @@ class tenant_app():
         # requestObj is used for locating the
         self.collection = collection
         self.updateObj = updateObj
-        self.list_fields = ['resources']
         self.query_fields = ['name', 'activated']
         if requestObj:
             self.requestObj = requestObj
@@ -66,6 +65,8 @@ class tenant_app():
         try:
             self.type_convert()
             self.updateObj['updatedAt'] = datetime.now()
+            if self.updateObj.get('logo'):
+                self.updateObj['logo'] = ObjectId(self.updateObj['logo'])
             TENANT.objects.raw(self.requestObj).update({'$set': self.updateObj})
         except Exception as e:
             print('tenant_update_set error:', e)
@@ -96,26 +97,19 @@ class tenant_app():
             logo = None
         else:
             logo = str(tenant.logo)
+        resources = [] if tenant.resources == [] else [r.resource for r in tenant.resources]
         re = {
             "id": str(tenant._id),
             "name": tenant.name,
             "logo": logo,
             "remark": tenant.remark,
-            "resources": tenant.resources,
+            "resources": resources,
             "activated": tenant.activated,
             # "custom_pictures": tenant,
             # "description": tenant.description,
             "createdAt": tenant.createdAt,
             "updatedAt": tenant.updatedAt
         }
-        # pick id
-        if self.list_fields:
-            for item in self.list_fields:
-                item_list = getattr(tenant, item)
-                id_list = []
-                for i in item_list:
-                    id_list.append(str(i))
-                re[item] = id_list
         # select by fields
         fields = self.fields
         if fields:
@@ -143,3 +137,11 @@ class tenant_app():
                     self.requestObj['activated'] = True
                 else:
                     self.requestObj['activated'] = False
+
+    def tenant_count(self):
+        try:
+            count = TENANT.objects.raw(self.requestObj).count()
+            return count
+        except Exception as e:
+            print('tenant_count error:', e)
+            raise

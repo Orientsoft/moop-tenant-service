@@ -13,7 +13,7 @@ class RESOURCE(MongoModel):
     delete = BooleanField()
 
     class Meta:
-        collection_name = 'tenant'
+        collection_name = 'resource'
         final = True
 
 
