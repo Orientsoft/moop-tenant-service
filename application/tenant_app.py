@@ -97,16 +97,14 @@ class tenant_app():
             logo = None
         else:
             logo = str(tenant.logo)
-        resources = [] if tenant.resources == [] else [r.resource for r in tenant.resources]
+        # resources = [] if tenant.resources == [] else [r.resource for r in tenant.resources]
         re = {
             "id": str(tenant._id),
             "name": tenant.name,
             "logo": logo,
             "remark": tenant.remark,
-            "resources": resources,
+            "resources": tenant.resources,
             "activated": tenant.activated,
-            # "custom_pictures": tenant,
-            # "description": tenant.description,
             "createdAt": tenant.createdAt,
             "updatedAt": tenant.updatedAt
         }

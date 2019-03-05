@@ -53,10 +53,8 @@ def tenant_create():
     for i in needed:
         if i not in requestObj.keys():
             return jsonify(raise_status(400, '信息有缺失'))
-    list_supply = ['resources']
-    for i in list_supply:
-        if i not in requestObj.keys():
-            requestObj[i] = []
+    if not requestObj.get('resources'):
+        requestObj['resources'] = []
     if 'logo' not in requestObj.keys():
         requestObj['logo'] = None
     try:
@@ -84,18 +82,9 @@ def tenant_get_by_id(tenant_id):
 @tenants.route('/tenants/<tenant_id>', methods=['PUT'])
 def tenant_update_totally(tenant_id):
     from application.tenant_app import tenant_app
-    from auth import raise_status
     requestObj = {'_id': tenant_id}
     updateObj = request.get_json()
     fields = request.args.get('fields')
-    # check if the json has all needed attrs in tenantInResponse
-    needed = ['activated', 'name', 'logo', 'remark', 'resources']
-    for i in needed:
-        if i not in updateObj.keys():
-            # todo: what to return, when it comes to error
-            # return jsonify({"error": "need more attr"}), 400
-            info = '数据不全'
-            return raise_status(400, info)
     tenant_app(requestObj=requestObj, updateObj=updateObj).tenant_update_set()
     tenant = tenant_app(requestObj=requestObj, collection='tenant').tenant_find_one()
     re = tenant_app(fields=fields).get_return_by_fields(tenant=tenant)

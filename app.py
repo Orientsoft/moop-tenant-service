@@ -7,7 +7,7 @@ app.config.from_object(config)
 
 def register_blueprint():
     from application.tenant import tenants
-    app.register_blueprint(tenants, url_prefix='/server/v1')
+    app.register_blueprint(tenants, url_prefix='/service/v1')
 
 
 register_blueprint()
