@@ -8,9 +8,34 @@ tenants = Blueprint('tenants', __name__)
 def tenant_list():
     from application.tenant_app import tenant_app
     from auth import raise_status
+    from model import TENANT
     requestObj = {}
     page = int(request.args.get('page', '1'))
     pageSize = int(request.args.get('pageSize', '20'))
+    if request.args.get('id'):
+        id_list = request.args['id'].replace('[', '').replace(']', '').replace(' ', ''). \
+            replace("'", '').replace('"', '').split(',')
+        ObjectId_list = []
+        for i in id_list:
+            ObjectId_list.append(ObjectId(i))
+        model_list = list(TENANT.objects.raw({'_id': {'$in': ObjectId_list}}))
+        tenant_dict = {}
+        for tenant_model in model_list:
+            if tenant_model.logo == None:
+                logo = None
+            else:
+                logo = str(tenant_model.logo)
+            tenant_dict[str(tenant_model._id)] = {
+                'id': str(tenant_model._id),
+                'name': tenant_model.name,
+                'logo': logo,
+                'remark': tenant_model.remark,
+                'resources': tenant_model.resources,
+                "activated": tenant_model.activated,
+                "createdAt": tenant_model.createdAt,
+                "updatedAt": tenant_model.updatedAt
+            }
+        return jsonify(tenant_dict)
     if request.args.get('all'):
         page = pageSize = None
     else:
