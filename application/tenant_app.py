@@ -1,5 +1,6 @@
 from model import TENANT
 from bson import ObjectId
+import logging
 
 
 class tenant_app():
@@ -32,7 +33,7 @@ class tenant_app():
                 updatedAt=datetime.now()
             ).save()
         except Exception as e:
-            print('tenant_insert error:', e)
+            logging.error(e)
             return True
         return tenant
 
@@ -40,11 +41,10 @@ class tenant_app():
         try:
             self.type_convert()
             tenant = TENANT.objects.get(self.requestObj)
-        except TENANT.DoesNotExist as e:
-            print("tenant_get doesn't exist")
+        except TENANT.DoesNotExist:
             return 'DoesNotExist'
         except Exception as e:
-            print('tenant_get error:', e)
+            logging.error(e)
             return e
         return tenant
 
@@ -53,10 +53,9 @@ class tenant_app():
             self.type_convert()
             tenant = list(TENANT.objects.raw(self.requestObj))
         except TENANT.DoesNotExist:
-            print("tenant_get doesn't exist")
             return 'DoesNotExist'
         except Exception as e:
-            print('tenant_find_all error:', e)
+            logging.error(e)
             return e
         return tenant
 
@@ -69,7 +68,7 @@ class tenant_app():
                 self.updateObj['logo'] = ObjectId(self.updateObj['logo'])
             TENANT.objects.raw(self.requestObj).update({'$set': self.updateObj})
         except Exception as e:
-            print('tenant_update_set error:', e)
+            logging.error(e)
             return e
 
     def tenant_delete(self):
@@ -77,11 +76,10 @@ class tenant_app():
             self.type_convert()
             # when tenant is deleted, it`s 'delete' is True, and it can never be queried normally
             TENANT.objects.raw(self.requestObj).update({'$set': {'delete': True}})
-        except TENANT.DoesNotExist as e:
-            print("tenant doesn't exist", e)
+        except TENANT.DoesNotExist:
             return 'DoesNotExist'
         except Exception as e:
-            print("tenant_delete error:", e)
+            logging.error(e)
             return e
 
     def str_to_list(self):
@@ -141,5 +139,5 @@ class tenant_app():
             count = TENANT.objects.raw(self.requestObj).count()
             return count
         except Exception as e:
-            print('tenant_count error:', e)
+            logging.error(e)
             raise

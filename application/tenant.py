@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from bson import ObjectId
+import logging
 
 tenants = Blueprint('tenants', __name__)
 
@@ -87,7 +88,7 @@ def tenant_create():
         re = tenant_app(fields=fields).get_return_by_fields(tenant=tenant)
         return jsonify(re)
     except Exception as e:
-        print(e)
+        logging.error(e)
         return jsonify(raise_status(400, '租户创建失败'))
 
 
