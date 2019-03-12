@@ -1,6 +1,7 @@
 from model import TENANT
 from bson import ObjectId
 import logging
+import traceback
 
 
 class tenant_app():
@@ -33,7 +34,7 @@ class tenant_app():
                 updatedAt=datetime.now()
             ).save()
         except Exception as e:
-            logging.error(e)
+            logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
             return True
         return tenant
 
@@ -44,7 +45,7 @@ class tenant_app():
         except TENANT.DoesNotExist:
             return 'DoesNotExist'
         except Exception as e:
-            logging.error(e)
+            logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
             return e
         return tenant
 
@@ -55,7 +56,7 @@ class tenant_app():
         except TENANT.DoesNotExist:
             return 'DoesNotExist'
         except Exception as e:
-            logging.error(e)
+            logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
             return e
         return tenant
 
@@ -68,7 +69,7 @@ class tenant_app():
                 self.updateObj['logo'] = ObjectId(self.updateObj['logo'])
             TENANT.objects.raw(self.requestObj).update({'$set': self.updateObj})
         except Exception as e:
-            logging.error(e)
+            logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
             return e
 
     def tenant_delete(self):
@@ -79,7 +80,7 @@ class tenant_app():
         except TENANT.DoesNotExist:
             return 'DoesNotExist'
         except Exception as e:
-            logging.error(e)
+            logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
             return e
 
     def str_to_list(self):
@@ -139,5 +140,5 @@ class tenant_app():
             count = TENANT.objects.raw(self.requestObj).count()
             return count
         except Exception as e:
-            logging.error(e)
+            logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
             raise
