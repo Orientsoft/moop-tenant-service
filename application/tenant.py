@@ -82,7 +82,7 @@ def tenant_create():
     requestObj = filter(query_list=query_list, updateObj=requestObj)
     for i in needed:
         if i not in requestObj.keys():
-            return jsonify(raise_status(400, '信息有缺失'))
+            return raise_status(400, '信息有缺失')
     try:
         TENANT.objects.get({'name': requestObj['name']})
         return raise_status(400, '租户名已存在')
@@ -97,7 +97,7 @@ def tenant_create():
             return jsonify(re)
         except Exception as e:
             logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
-            return jsonify(raise_status(400, '租户创建失败'))
+            return raise_status(400, '租户创建失败')
 
 
 @tenants.route('/tenants/<tenant_id>', methods=['GET'])
@@ -130,7 +130,7 @@ def tenant_update_totally(tenant_id):
     needed = ['name', 'remark', 'activated']
     for i in needed:
         if i not in requestObj.keys():
-            return jsonify(raise_status(400, '信息有缺失'))
+            return raise_status(400, '信息有缺失')
     requestObj = filter(query_list=query_list, updateObj=requestObj)
     tenant_app(requestObj=requestObj, updateObj=updateObj).tenant_update_set()
     tenant = tenant_app(requestObj=requestObj, collection='tenant').tenant_find_one()
