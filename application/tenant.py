@@ -131,7 +131,7 @@ def tenant_update_totally(tenant_id):
     for i in needed:
         if i not in updateObj.keys():
             return raise_status(400, '信息有缺失')
-    requestObj = filter(query_list=query_list, updateObj=requestObj)
+    updateObj = filter(query_list=query_list, updateObj=updateObj)
     tenant_app(requestObj=requestObj, updateObj=updateObj).tenant_update_set()
     tenant = tenant_app(requestObj=requestObj, collection='tenant').tenant_find_one()
     re = tenant_app(fields=fields).get_return_by_fields(tenant=tenant)
@@ -149,7 +149,7 @@ def tenant_update_partly(tenant_id):
     updateObj = request.get_json()
     fields = request.args.get('fields')
     query_list = ['name', 'logo', 'remark', 'resources', 'activated']
-    requestObj = filter(query_list=query_list, updateObj=requestObj)
+    updateObj = filter(query_list=query_list, updateObj=updateObj)
     tenant_app(requestObj=requestObj, updateObj=updateObj).tenant_update_set()
     tenant = tenant_app(requestObj=requestObj, collection='tenant').tenant_find_one()
     re = tenant_app(fields=fields).get_return_by_fields(tenant=tenant)
