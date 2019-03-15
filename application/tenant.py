@@ -81,7 +81,7 @@ def tenant_create():
         if i not in requestObj.keys():
             return jsonify(raise_status(400, '信息有缺失'))
     if not requestObj.get('resources'):
-        requestObj['resources'] = []
+        requestObj['resources'] = {}
     if 'logo' not in requestObj.keys():
         requestObj['logo'] = None
     try:
