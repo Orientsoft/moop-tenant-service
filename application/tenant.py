@@ -129,7 +129,7 @@ def tenant_update_totally(tenant_id):
     query_list = ['name', 'logo', 'remark', 'resources', 'activated']
     needed = ['name', 'remark', 'activated']
     for i in needed:
-        if i not in requestObj.keys():
+        if i not in updateObj.keys():
             return raise_status(400, '信息有缺失')
     requestObj = filter(query_list=query_list, updateObj=requestObj)
     tenant_app(requestObj=requestObj, updateObj=updateObj).tenant_update_set()
