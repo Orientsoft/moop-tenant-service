@@ -106,7 +106,7 @@ def tenant_get_by_id(tenant_id):
     try:
         TENANT.objects.get({'_id': ObjectId(tenant_id)})
     except TENANT.DoesNotExist:
-        raise_status(400, '无效的租户id')
+        return raise_status(400, '无效的租户id')
     requestObj = {'_id': tenant_id}
     fields = request.args.get('fields')
     tenant = tenant_app(requestObj=requestObj, collection='tenant').tenant_find_one()
@@ -144,7 +144,7 @@ def tenant_update_partly(tenant_id):
     try:
         TENANT.objects.get({'_id': ObjectId(tenant_id)})
     except TENANT.DoesNotExist:
-        raise_status(400, '无效的租户id')
+        return raise_status(400, '无效的租户id')
     requestObj = {'_id': tenant_id}
     updateObj = request.get_json()
     fields = request.args.get('fields')
