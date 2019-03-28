@@ -9,7 +9,7 @@ class tenant_app():
         # requestObj is used for locating the
         self.collection = collection
         self.updateObj = updateObj
-        self.query_fields = ['name', 'activated']
+        self.query_fields = ['name']
         if requestObj:
             self.requestObj = requestObj
             self.requestObj['delete'] = False
@@ -127,13 +127,6 @@ class tenant_app():
         # _id
         if '_id' in self.requestObj.keys():
             self.requestObj['_id'] = ObjectId(self.requestObj['_id'])
-        if hasattr(self, 'query_fields'):
-            if 'activated' in self.requestObj.keys():
-                value = self.requestObj['activated']
-                if value == 'true' or value == 'True':
-                    self.requestObj['activated'] = True
-                else:
-                    self.requestObj['activated'] = False
 
     def tenant_count(self):
         try:
