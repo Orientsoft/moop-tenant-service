@@ -1,4 +1,4 @@
-from pymodm import CharField, DictField, BooleanField, DateTimeField, ObjectIdField
+from pymodm import CharField, ListField, BooleanField, DateTimeField, ObjectIdField
 from pymodm.connection import connect
 from pymodm import MongoModel
 from app import app
@@ -10,7 +10,7 @@ class TENANT(MongoModel):
     name = CharField()
     logo = ObjectIdField()
     remark = CharField()
-    resources = DictField(blank=True)
+    resources = ListField(blank=True)
     delete = BooleanField()
     activated = BooleanField()
     createdAt = DateTimeField()

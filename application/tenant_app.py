@@ -90,7 +90,7 @@ class tenant_app():
         result = fields.split(',')
         return result
 
-    def get_return_by_fields(self, tenant: TENANT)-> dict:
+    def get_return_by_fields(self, tenant: TENANT):
         # ensure that object is complete
         if tenant.logo == None:
             logo = None
