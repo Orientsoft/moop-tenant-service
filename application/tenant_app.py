@@ -30,6 +30,7 @@ class tenant_app():
                 resources=self.requestObj['resources'],
                 delete=False,
                 activated=self.requestObj['activated'],
+                namespace=self.requestObj['namespace'],
                 createdAt=datetime.now(),
                 updatedAt=datetime.now()
             ).save()
@@ -103,6 +104,7 @@ class tenant_app():
             "logo": logo,
             "remark": tenant.remark,
             "resources": tenant.resources,
+            "namespace": tenant.namespace,
             "activated": tenant.activated,
             "createdAt": tenant.createdAt,
             "updatedAt": tenant.updatedAt

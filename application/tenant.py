@@ -34,6 +34,7 @@ def tenant_list():
                 'name': tenant_model.name,
                 'logo': logo,
                 'remark': tenant_model.remark,
+                'namespace': tenant_model.namespace,
                 'resources': tenant_model.resources,
                 "activated": tenant_model.activated,
                 "createdAt": tenant_model.createdAt,
@@ -77,8 +78,8 @@ def tenant_create():
     from application.tenant_app import tenant_app
     requestObj = request.get_json()
     fields = request.args.get('fields')
-    needed = ['name', 'remark', 'activated']
-    query_list = ['name', 'logo', 'remark', 'resources', 'activated']
+    needed = ['name', 'remark', 'activated', 'namespace']
+    query_list = ['name', 'logo', 'remark', 'resources', 'activated', 'namespace']
     requestObj = filter(query_list=query_list, updateObj=requestObj)
     for i in needed:
         if i not in requestObj.keys():
@@ -126,8 +127,8 @@ def tenant_update_totally(tenant_id):
     requestObj = {'_id': tenant_id}
     updateObj = request.get_json()
     fields = request.args.get('fields')
-    query_list = ['name', 'logo', 'remark', 'resources', 'activated']
-    needed = ['name', 'remark', 'activated']
+    query_list = ['name', 'logo', 'remark', 'resources', 'activated', 'namespace']
+    needed = ['name', 'remark', 'activated', 'namespace', 'resources', 'logo']
     for i in needed:
         if i not in updateObj.keys():
             return raise_status(400, '信息有缺失')
@@ -148,7 +149,7 @@ def tenant_update_partly(tenant_id):
     requestObj = {'_id': tenant_id}
     updateObj = request.get_json()
     fields = request.args.get('fields')
-    query_list = ['name', 'logo', 'remark', 'resources', 'activated']
+    query_list = ['name', 'logo', 'remark', 'resources', 'activated', 'namespace']
     updateObj = filter(query_list=query_list, updateObj=updateObj)
     tenant_app(requestObj=requestObj, updateObj=updateObj).tenant_update_set()
     tenant = tenant_app(requestObj=requestObj, collection='tenant').tenant_find_one()

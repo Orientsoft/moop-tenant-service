@@ -13,6 +13,7 @@ class TENANT(MongoModel):
     resources = ListField(blank=True)
     delete = BooleanField()
     activated = BooleanField()
+    namespace = CharField()
     createdAt = DateTimeField()
     updatedAt = DateTimeField()
 
