@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tenant-service
+  # namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moop
+      service: tenant-service
+  template:
+    metadata:
+      labels:
+        app: moop
+        service: tenant-service
+    spec:
+      containers:
+      - name: moop-tenant-service
+        image: registry.datadynamic.io/moop/moop-tenant-service:20190415
+        volumeMounts:
+        - name:  tenant-service-config
+          mountPath: /app/config.yaml
+          subPath: config.yaml
+
+      imagePullSecrets:
+      - name: regcred
+
+      volumes:
+      - name:  tenant-service-config
+        configMap:
+          name: tenant-service-config
