@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: project-tenant-config
+  name: tenant-service-config
 
 data:
     config.yaml: |-
