@@ -7,7 +7,7 @@ spec:
   ports:
   - name: tenant-service-http
     nodePort: 31778
-    port: 7778
+    port: 80
     protocol: TCP
     targetPort: 80
   selector:
