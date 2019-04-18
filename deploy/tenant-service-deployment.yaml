@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: moop-tenant-service
-        image: registry.datadynamic.io/moop/moop-tenant-service:20190415
+        image: registry.datadynamic.io/moop/moop-tenant-service:{IMAGE_TAG_for_change}
         volumeMounts:
         - name:  tenant-service-config
           mountPath: /app/config.yaml
