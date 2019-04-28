@@ -22,7 +22,7 @@ def tenant_list():
         ObjectId_list = []
         for i in id_list:
             ObjectId_list.append(ObjectId(i))
-        model_list = list(TENANT.objects.raw({'_id': {'$in': ObjectId_list}}))
+        model_list = list(TENANT.objects.raw({'_id': {'$in': ObjectId_list}, 'delete': False}))
         tenant_dict = {}
         for tenant_model in model_list:
             if tenant_model.logo == None:
@@ -85,7 +85,7 @@ def tenant_create():
         if i not in requestObj.keys():
             return raise_status(400, '信息有缺失')
     try:
-        TENANT.objects.get({'name': requestObj['name']})
+        TENANT.objects.get({'name': requestObj['name'], 'delete': False})
         return raise_status(400, '租户名已存在')
     except TENANT.DoesNotExist:
         if not requestObj.get('resources'):
@@ -105,7 +105,7 @@ def tenant_create():
 def tenant_get_by_id(tenant_id):
     from application.tenant_app import tenant_app
     try:
-        TENANT.objects.get({'_id': ObjectId(tenant_id)})
+        TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
     except TENANT.DoesNotExist:
         return raise_status(400, '无效的租户id')
     requestObj = {'_id': tenant_id}
@@ -121,7 +121,7 @@ def tenant_get_by_id(tenant_id):
 def tenant_update_totally(tenant_id):
     from application.tenant_app import tenant_app
     try:
-        TENANT.objects.get({'_id': ObjectId(tenant_id)})
+        TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
     except TENANT.DoesNotExist:
         return raise_status(400, '无效的租户id')
     requestObj = {'_id': tenant_id}
@@ -143,7 +143,7 @@ def tenant_update_totally(tenant_id):
 def tenant_update_partly(tenant_id):
     from application.tenant_app import tenant_app
     try:
-        TENANT.objects.get({'_id': ObjectId(tenant_id)})
+        TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
     except TENANT.DoesNotExist:
         return raise_status(400, '无效的租户id')
     requestObj = {'_id': tenant_id}
@@ -161,7 +161,7 @@ def tenant_update_partly(tenant_id):
 def tenant_delete(tenant_id):
     from application.tenant_app import tenant_app
     try:
-        TENANT.objects.get({'_id': ObjectId(tenant_id)})
+        TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
     except TENANT.DoesNotExist:
         raise_status(400, '无效的租户id')
     requestObj = {'_id': tenant_id}
