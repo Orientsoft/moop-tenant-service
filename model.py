@@ -1,4 +1,4 @@
-from pymodm import CharField, ListField, BooleanField, DateTimeField, ObjectIdField
+from pymodm import CharField, ListField, BooleanField, DateTimeField, ObjectIdField, DictField
 from pymodm.connection import connect
 from pymodm import MongoModel
 from app import app
@@ -19,4 +19,24 @@ class TENANT(MongoModel):
 
     class Meta:
         collection_name = 'tenant'
+        final = True
+
+
+class CUSTOM(MongoModel):
+    tenant = ReferenceError(TENANT)
+    name = CharField()
+    logo = ListField()
+    background = CharField()
+    remark = CharField()
+    description = CharField()
+    characteristic = ListField()
+    introduction = ListField()
+    tags = ListField()
+    connect = DictField()
+    createdAt = DateTimeField()
+    updatedAt = DateTimeField()
+    delete = BooleanField()
+
+    class Meta:
+        collection_name = 'custom'
         final = True

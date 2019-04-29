@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
 from bson import ObjectId
 from auth import filter, raise_status
-from model import TENANT
+from model import TENANT, CUSTOM
+from datetime import datetime
 import logging
 import traceback
 
@@ -163,7 +164,80 @@ def tenant_delete(tenant_id):
     try:
         TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
     except TENANT.DoesNotExist:
-        raise_status(400, '无效的租户id')
+        return raise_status(400, '无效的租户id')
     requestObj = {'_id': tenant_id}
     tenant_app(requestObj=requestObj).tenant_delete()
     return raise_status(200)
+
+
+@tenants.route('/tenants/<tenant_id>/custom', methods=['POST'])
+def tenant_custom_create(tenant_id):
+    from application.tenant_app import unfold_custom
+    try:
+        TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
+    except TENANT.DoesNotExist:
+        return '无效的租户', 400
+    query_list = ['name', 'logo', 'background', 'description', 'characteristic', 'introduction', 'remark', 'tags',
+                  'connect']
+    insertObj = filter(query_list=query_list, updateObj=request.json)
+    try:
+        check = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
+        # 若该租户已有定制数据，则替换为新的定制数据，因此数据库中一个租户应该只有一套定制数据
+        insertObj['updatedAt'] = datetime.now()
+        CUSTOM.objects.raw({'_id': check._id, 'delete': False}).update({'$set': insertObj})
+        Model = CUSTOM.objects.get({'_id': check._id, 'delete': False})
+    except CUSTOM.DoesNotExist:
+        Model = CUSTOM(
+            name=insertObj.get('name'),
+            logo=insertObj.get('logo'),
+            background=insertObj.get('background'),
+            description=insertObj.get('description'),
+            characteristic=insertObj.get('characteristic'),
+            introduction=insertObj.get('introduction'),
+            remark=insertObj.get('remark'),
+            tags=insertObj.get('tags'),
+            connect=insertObj.get('connect'),
+            tenant=ObjectId(tenant_id),
+            createdAt=datetime.now(),
+            updatedAt=datetime.now(),
+            delete=False
+        ).save()
+    custom = unfold_custom(Model=Model, embed=request.args.get('embed'))
+    return jsonify(custom)
+
+
+@tenants.route('/tenants/<tenant_id>/custom', methods=['GET'])
+def tenant_custom_get(tenant_id):
+    from application.tenant_app import unfold_custom
+    try:
+        Model = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
+    except CUSTOM.DoesNotExist:
+        return jsonify({})
+    custom = unfold_custom(Model=Model, embed=request.args.get('embed'))
+    return jsonify(custom)
+
+
+@tenants.route('/tenants/<tenant_id>/custom', methods=['PATCH'])
+def tenant_custom_change(tenant_id):
+    from application.tenant_app import unfold_custom
+    try:
+        CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
+    except CUSTOM.DoesNotExist:
+        return '请先创建定制数据', 400
+    query_list = ['name', 'logo', 'background', 'description', 'characteristic', 'introduction', 'remark', 'tags',
+                  'connect']
+    updateObj = filter(query_list=query_list, updateObj=request.json)
+    updateObj['updatedAt'] = datetime.now()
+    CUSTOM.objects.raw({'tenant': ObjectId(tenant_id), 'delete': False}).update({'$set': updateObj})
+    Model = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
+    custom = unfold_custom(Model=Model, embed=request.args.get('embed'))
+    return jsonify(custom)
+
+
+@tenants.route('tenants/<tenant_id>/custom', methods=['DELETE'])
+def tenant_custom_delete(tenant_id):
+    try:
+        CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
+    except CUSTOM.DoesNotExist:
+        return '不存在定制数据', 400
+    CUSTOM.objects.raw({'tenant': ObjectId(tenant_id), 'delete': False}).update({'$set': {'delete': True}})

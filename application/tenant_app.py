@@ -137,3 +137,35 @@ class tenant_app():
         except Exception as e:
             logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
             raise
+
+
+def unfold_tenant(Model):
+    return {
+        'id': str(Model._id),
+        'name': Model.name,
+        'logo': Model.logo,
+        'remark': Model.remark,
+        'resources': Model.resources,
+        'activated': Model.activated,
+        'namespace': Model.namespace,
+        'updatedAt': Model.updatedAt,
+        'createdAt': Model.createdAt
+    }
+
+
+def unfold_custom(Model, embed=None):
+    return {
+        'id': str(Model._id),
+        'name': Model.name,
+        'logo': Model.logo,
+        'background': Model.background,
+        'remark': Model.remark,
+        'description': Model.description,
+        'introduction': Model.introduction,
+        'characteristic': Model.characteristic,
+        'tags': Model.tags,
+        'connect': Model.connect,
+        'tenant': Model.tenant if not embed else unfold_tenant(Model.tenant),
+        'createdAt': Model.createdAt,
+        'updatedAt': Model.updatedAt
+    }
