@@ -259,6 +259,8 @@ def tenant_custom_change(tenant_id):
     # 处理ObjectId转字符串问题
     if 'logo' in updateObj:
         updateObj['logo'] = [ObjectId(x) for x in updateObj['logo']]
+    if 'background' in updateObj:
+        updateObj['background'] = ObjectId(updateObj['background'])
     if 'introduction' in updateObj:
         for x in updateObj['introduction']:
             x['thumb'] = ObjectId(x['thumb'])
