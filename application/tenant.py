@@ -217,6 +217,7 @@ def tenant_custom_get(tenant_id):
     try:
         Model = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
     except CUSTOM.DoesNotExist:
+        # 若数据库中没有该租户定制信息，则自动创建
         try:
             TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
         except TENANT.DoesNotExist:
@@ -255,6 +256,7 @@ def tenant_custom_change(tenant_id):
                   'email', 'url', 'mobile', 'address', 'teacher']
     updateObj = filter(query_list=query_list, updateObj=request.json)
     updateObj['updatedAt'] = datetime.now()
+    # 处理ObjectId转字符串问题
     if 'logo' in updateObj:
         updateObj['logo'] = ObjectId(updateObj['logo'])
     if 'introduction' in updateObj:

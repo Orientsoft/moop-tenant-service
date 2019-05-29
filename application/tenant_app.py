@@ -143,7 +143,7 @@ def unfold_tenant(Model):
     return {
         'id': str(Model._id),
         'name': Model.name,
-        'logo': Model.logo,
+        'logo': str(Model.logo) if Model.logo else None,
         'remark': Model.remark,
         'resources': Model.resources,
         'activated': Model.activated,
@@ -163,7 +163,7 @@ def unfold_custom(Model, embed=None):
     return {
         'id': str(Model._id),
         'name': Model.name,
-        'logo': str(Model.logo) if Model.logo is not None else None,
+        'logo': str(Model.logo) if Model.logo else None,
         'background': Model.background,
         'remark': Model.remark,
         'description': Model.description,
