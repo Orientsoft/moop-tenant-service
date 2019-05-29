@@ -258,7 +258,7 @@ def tenant_custom_change(tenant_id):
     updateObj['updatedAt'] = datetime.now()
     # 处理ObjectId转字符串问题
     if 'logo' in updateObj:
-        updateObj['logo'] = ObjectId(updateObj['logo'])
+        updateObj['logo'] = [ObjectId(x) for x in updateObj['logo']]
     if 'introduction' in updateObj:
         for x in updateObj['introduction']:
             x['thumb'] = ObjectId(x['thumb'])
