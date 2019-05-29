@@ -157,13 +157,14 @@ def unfold_custom(Model, embed=None):
     if Model.introduction:
         introduction = Model.introduction
         for x in introduction:
-            x['thumb'] = str(x['thumb'])
+            if 'thumb' in x and x['thumb']:
+                x['thumb'] = str(x['thumb'])
     else:
         introduction = None
     return {
         'id': str(Model._id),
         'name': Model.name,
-        'logo': str(Model.logo) if Model.logo else None,
+        'logo': [str(x) if x else None for x in Model.logo],
         'background': Model.background,
         'remark': Model.remark,
         'description': Model.description,
