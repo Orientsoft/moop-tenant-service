@@ -26,7 +26,7 @@ class CUSTOM(MongoModel):
     tenant = ReferenceField(TENANT)
     name = CharField(blank=True)
     logo = ListField(blank=True)
-    background = CharField(blank=True)
+    background = ObjectIdField(blank=True)
     remark = CharField(blank=True)
     description = CharField(blank=True)
     characteristic = ListField(blank=True)

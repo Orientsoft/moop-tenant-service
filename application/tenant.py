@@ -263,7 +263,10 @@ def tenant_custom_change(tenant_id):
         updateObj['background'] = ObjectId(updateObj['background'])
     if 'introduction' in updateObj:
         for x in updateObj['introduction']:
-            x['thumb'] = ObjectId(x['thumb'])
+            if 'thumb' in x:
+                x['thumb'] = ObjectId(x['thumb'])
+            else:
+                x['thumb'] = None
     CUSTOM.objects.raw({'tenant': ObjectId(tenant_id), 'delete': False}).update({'$set': updateObj})
     Model = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
     custom = unfold_custom(Model=Model, embed=request.args.get('embed'))
