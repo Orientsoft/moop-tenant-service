@@ -1,4 +1,4 @@
-from pymodm import CharField, ListField, BooleanField, DateTimeField, ObjectIdField, DictField
+from pymodm import CharField, ListField, BooleanField, DateTimeField, ObjectIdField, ReferenceField
 from pymodm.connection import connect
 from pymodm import MongoModel
 from app import app
@@ -23,16 +23,20 @@ class TENANT(MongoModel):
 
 
 class CUSTOM(MongoModel):
-    tenant = ReferenceError(TENANT)
-    name = CharField()
-    logo = ListField()
-    background = CharField()
-    remark = CharField()
-    description = CharField()
-    characteristic = ListField()
-    introduction = ListField()
-    tags = ListField()
-    connect = DictField()
+    tenant = ReferenceField(TENANT)
+    name = CharField(blank=True)
+    logo = ListField(blank=True)
+    background = CharField(blank=True)
+    remark = CharField(blank=True)
+    description = CharField(blank=True)
+    characteristic = ListField(blank=True)
+    introduction = ListField(blank=True)
+    tags = ListField(blank=True)
+    email = CharField(blank=True)
+    mobile = CharField(blank=True)
+    url = CharField(blank=True)
+    address = CharField(blank=True)
+    teacher = CharField(blank=True)
     createdAt = DateTimeField()
     updatedAt = DateTimeField()
     delete = BooleanField()

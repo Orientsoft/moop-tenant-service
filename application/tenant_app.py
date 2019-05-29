@@ -154,18 +154,28 @@ def unfold_tenant(Model):
 
 
 def unfold_custom(Model, embed=None):
+    if Model.introduction:
+        introduction = Model.introduction
+        for x in introduction:
+            x['thumb'] = str(x['thumb'])
+    else:
+        introduction = None
     return {
         'id': str(Model._id),
         'name': Model.name,
-        'logo': Model.logo,
+        'logo': str(Model.logo) if Model.logo is not None else None,
         'background': Model.background,
         'remark': Model.remark,
         'description': Model.description,
-        'introduction': Model.introduction,
+        'introduction': introduction,
         'characteristic': Model.characteristic,
         'tags': Model.tags,
-        'connect': Model.connect,
-        'tenant': Model.tenant if not embed else unfold_tenant(Model.tenant),
+        'email': Model.email,
+        'mobile': Model.mobile,
+        'url': Model.url,
+        'address': Model.address,
+        'teacher': Model.teacher,
+        'tenant': str(Model.tenant._id) if not embed else unfold_tenant(Model.tenant),
         'createdAt': Model.createdAt,
         'updatedAt': Model.updatedAt
     }

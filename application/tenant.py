@@ -96,6 +96,7 @@ def tenant_create():
         try:
             tenant = tenant_app(requestObj=requestObj).tenant_insert()
             re = tenant_app(fields=fields).get_return_by_fields(tenant=tenant)
+
             return jsonify(re)
         except Exception as e:
             logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
@@ -178,7 +179,7 @@ def tenant_custom_create(tenant_id):
     except TENANT.DoesNotExist:
         return '无效的租户', 400
     query_list = ['name', 'logo', 'background', 'description', 'characteristic', 'introduction', 'remark', 'tags',
-                  'connect']
+                  'email', 'url', 'mobile', 'address', 'teacher']
     insertObj = filter(query_list=query_list, updateObj=request.json)
     try:
         check = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
@@ -196,7 +197,11 @@ def tenant_custom_create(tenant_id):
             introduction=insertObj.get('introduction'),
             remark=insertObj.get('remark'),
             tags=insertObj.get('tags'),
-            connect=insertObj.get('connect'),
+            email=insertObj.get('email'),
+            mobile=insertObj.get('mobile'),
+            url=insertObj.get('url'),
+            address=insertObj.get('address'),
+            teacher=insertObj.get('teacher'),
             tenant=ObjectId(tenant_id),
             createdAt=datetime.now(),
             updatedAt=datetime.now(),
@@ -212,7 +217,29 @@ def tenant_custom_get(tenant_id):
     try:
         Model = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
     except CUSTOM.DoesNotExist:
-        return jsonify({})
+        try:
+            TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
+        except TENANT.DoesNotExist:
+            return '租户已删除', 400
+        Model = CUSTOM(
+            name=None,
+            logo=None,
+            background=None,
+            description=None,
+            characteristic=None,
+            introduction=None,
+            remark=None,
+            tags=None,
+            email=None,
+            mobile=None,
+            url=None,
+            address=None,
+            teacher=None,
+            tenant=ObjectId(tenant_id),
+            createdAt=datetime.now(),
+            updatedAt=datetime.now(),
+            delete=False
+        ).save()
     custom = unfold_custom(Model=Model, embed=request.args.get('embed'))
     return jsonify(custom)
 
@@ -225,16 +252,21 @@ def tenant_custom_change(tenant_id):
     except CUSTOM.DoesNotExist:
         return '请先创建定制数据', 400
     query_list = ['name', 'logo', 'background', 'description', 'characteristic', 'introduction', 'remark', 'tags',
-                  'connect']
+                  'email', 'url', 'mobile', 'address', 'teacher']
     updateObj = filter(query_list=query_list, updateObj=request.json)
     updateObj['updatedAt'] = datetime.now()
+    if 'logo' in updateObj:
+        updateObj['logo'] = ObjectId(updateObj['logo'])
+    if 'introduction' in updateObj:
+        for x in updateObj['introduction']:
+            x['thumb'] = ObjectId(x['thumb'])
     CUSTOM.objects.raw({'tenant': ObjectId(tenant_id), 'delete': False}).update({'$set': updateObj})
     Model = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
     custom = unfold_custom(Model=Model, embed=request.args.get('embed'))
     return jsonify(custom)
 
 
-@tenants.route('tenants/<tenant_id>/custom', methods=['DELETE'])
+@tenants.route('/tenants/<tenant_id>/custom', methods=['DELETE'])
 def tenant_custom_delete(tenant_id):
     try:
         CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
