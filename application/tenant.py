@@ -84,10 +84,10 @@ def tenant_create():
     requestObj = filter(query_list=query_list, updateObj=requestObj)
     for i in needed:
         if i not in requestObj.keys():
-            return raise_status(400, '信息有缺失')
+            return '信息有缺失', 400
     try:
         TENANT.objects.get({'name': requestObj['name'], 'delete': False})
-        return raise_status(400, '租户名已存在')
+        return '租户名已存在', 400
     except TENANT.DoesNotExist:
         if not requestObj.get('resources'):
             requestObj['resources'] = {}
@@ -100,7 +100,7 @@ def tenant_create():
             return jsonify(re)
         except Exception as e:
             logging.error('Request Error: {}\nStack: {}\n'.format(e, traceback.format_exc()))
-            return raise_status(400, '租户创建失败')
+            return '租户创建失败', 400
 
 
 @tenants.route('/tenants/<tenant_id>', methods=['GET'])
@@ -165,10 +165,10 @@ def tenant_delete(tenant_id):
     try:
         TENANT.objects.get({'_id': ObjectId(tenant_id), 'delete': False})
     except TENANT.DoesNotExist:
-        return raise_status(400, '无效的租户id')
+        return '无效的租户id', 400
     requestObj = {'_id': tenant_id}
     tenant_app(requestObj=requestObj).tenant_delete()
-    return raise_status(200)
+    return '操作成功', 200
 
 
 @tenants.route('/tenants/<tenant_id>/custom', methods=['POST'])
