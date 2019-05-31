@@ -25,7 +25,7 @@ class tenant_app():
             self.type_convert()
             tenant = TENANT(
                 name=self.requestObj['name'],
-                logo=ObjectId(self.requestObj['logo']),
+                logo=ObjectId(self.requestObj['logo']) if self.requestObj['logo'] else None,
                 remark=self.requestObj['remark'],
                 resources=self.requestObj['resources'],
                 delete=False,
