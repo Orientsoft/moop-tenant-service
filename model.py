@@ -8,8 +8,8 @@ connect(app.config['MONGODB_URL'])
 
 class TENANT(MongoModel):
     name = CharField()
-    logo = ObjectIdField()
-    remark = CharField()
+    logo = ObjectIdField(blank=True)
+    remark = CharField(blank=True)
     resources = ListField(blank=True)
     delete = BooleanField()
     activated = BooleanField()
