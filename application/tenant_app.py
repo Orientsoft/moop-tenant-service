@@ -165,7 +165,7 @@ def unfold_custom(Model, embed=None):
     return {
         'id': str(Model._id),
         'name': Model.name,
-        'logo': [str(x) if x else None for x in Model.logo],
+        'logo': [str(x) if x else None for x in Model.logo] if Model.logo else None,
         'background': str(Model.background) if Model.background else None,
         'remark': Model.remark,
         'description': Model.description,
