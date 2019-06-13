@@ -1,5 +1,7 @@
 from flask import Flask
 from copy import deepcopy
+import logging
+import traceback
 import yaml
 
 
@@ -29,3 +31,9 @@ register_blueprint()
 def index():
     from auth import raise_status
     return raise_status(200)
+
+
+@app.errorhandler(Exception)
+def error_handler(error):
+    logging.error('Request Error: {}\nStack: {}\n'.format(error, traceback.format_exc()))
+    return 'PROJECT-SERVICE 未知错误', 500
