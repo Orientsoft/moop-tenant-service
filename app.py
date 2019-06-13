@@ -36,4 +36,4 @@ def index():
 @app.errorhandler(Exception)
 def error_handler(error):
     logging.error('Request Error: {}\nStack: {}\n'.format(error, traceback.format_exc()))
-    return 'PROJECT-SERVICE 未知错误', 500
+    return 'TENANT-SERVICE 未知错误', 500
