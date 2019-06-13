@@ -19,7 +19,7 @@ for cfg in config:
 
 def register_blueprint():
     from application.tenant import tenants
-    app.register_blueprint(tenants, url_prefix='/service/v1')
+    app.register_blueprint(tenants)
 
 
 register_blueprint()
