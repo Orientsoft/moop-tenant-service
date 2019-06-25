@@ -179,7 +179,7 @@ def tenant_custom_create(tenant_id):
     except TENANT.DoesNotExist:
         return '无效的租户', 400
     query_list = ['name', 'logo', 'background', 'description', 'characteristic', 'introduction', 'remark', 'tags',
-                  'email', 'url', 'mobile', 'address', 'teacher']
+                  'email', 'url', 'mobile', 'address', 'teacher', 'about', 'license', 'companys', 'features']
     insertObj = filter(query_list=query_list, updateObj=request.json)
     try:
         check = CUSTOM.objects.get({'tenant': ObjectId(tenant_id), 'delete': False})
@@ -198,6 +198,10 @@ def tenant_custom_create(tenant_id):
             remark=insertObj.get('remark'),
             tags=insertObj.get('tags'),
             email=insertObj.get('email'),
+            about=insertObj.get('about'),
+            license=insertObj.get('license'),
+            companys=insertObj.get('companys'),
+            features=insertObj.get('features'),
             mobile=insertObj.get('mobile'),
             url=insertObj.get('url'),
             address=insertObj.get('address'),
@@ -237,6 +241,10 @@ def tenant_custom_get(tenant_id):
             address=None,
             teacher=None,
             tenant=ObjectId(tenant_id),
+            about=None,
+            license=None,
+            companys=None,
+            features=None,
             createdAt=datetime.now(),
             updatedAt=datetime.now(),
             delete=False
@@ -253,7 +261,7 @@ def tenant_custom_change(tenant_id):
     except CUSTOM.DoesNotExist:
         return '请先创建定制数据', 400
     query_list = ['name', 'logo', 'background', 'description', 'characteristic', 'introduction', 'remark', 'tags',
-                  'email', 'url', 'mobile', 'address', 'teacher']
+                  'email', 'url', 'mobile', 'address', 'teacher', 'about', 'license', 'companys', 'features']
     updateObj = filter(query_list=query_list, updateObj=request.json)
     updateObj['updatedAt'] = datetime.now()
     # 处理ObjectId转字符串问题
