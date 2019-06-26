@@ -1,4 +1,4 @@
-from pymodm import CharField, ListField, BooleanField, DateTimeField, ObjectIdField, ReferenceField
+from pymodm import CharField, ListField, BooleanField, DateTimeField, ObjectIdField, ReferenceField, IntegerField
 from pymodm.connection import connect
 from pymodm import MongoModel
 from app import app
@@ -14,6 +14,7 @@ class TENANT(MongoModel):
     delete = BooleanField()
     activated = BooleanField()
     namespace = CharField()
+    limit = IntegerField(blank=True)
     createdAt = DateTimeField()
     updatedAt = DateTimeField()
 

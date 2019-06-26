@@ -35,6 +35,7 @@ def tenant_list():
                 'name': tenant_model.name,
                 'logo': logo,
                 'remark': tenant_model.remark,
+                'limit': tenant_model.limit,
                 'namespace': tenant_model.namespace,
                 'resources': tenant_model.resources,
                 "activated": tenant_model.activated,
@@ -80,7 +81,7 @@ def tenant_create():
     requestObj = request.get_json()
     fields = request.args.get('fields')
     needed = ['name', 'remark', 'activated', 'namespace']
-    query_list = ['name', 'logo', 'remark', 'resources', 'activated', 'namespace']
+    query_list = ['name', 'logo', 'remark', 'resources', 'activated', 'namespace', 'limit']
     requestObj = filter(query_list=query_list, updateObj=requestObj)
     for i in needed:
         if i not in requestObj.keys():
