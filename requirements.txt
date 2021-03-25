@@ -1,5 +1,5 @@
 Flask==1.0.2
 pymodm==0.4.1
-PyYAML==5.1
+PyYAML==5.4
 bson==0.5.8
 Werkzeug==0.14.1
